@@ -1,7 +1,6 @@
 "use strict";
 
 const keytokenModel = require("../models/keytoken.model");
-const mongoose = require("mongoose");
 
 // create token
 class KeyTokenService {
@@ -23,6 +22,7 @@ class KeyTokenService {
         refreshToken,
       };
       const options = { upsert: true, new: true };
+
       const tokens = await keytokenModel.findOneAndUpdate(
         filter,
         update,
@@ -42,6 +42,45 @@ class KeyTokenService {
 
   static removeKeyById = async (id) => {
     return await keytokenModel.findByIdAndDelete(id);
+  };
+
+  static findByRefreshTokenUsed = async (refreshToken) => {
+    return await keytokenModel
+      .findOne({ refreshTokenUsed: refreshToken })
+      .lean();
+  };
+
+  static findByRefreshToken = async (refreshToken) => {
+    return await keytokenModel.findOne({ refreshToken });
+  };
+
+  static deleteKeyById = async (userId) => {
+    return await keytokenModel.deleteOne({ name: userId });
+  };
+
+  static updateKeyToken = async ({
+    userId,
+    refreshToken,
+    refreshTokenUsed,
+  }) => {
+    try {
+      const filter = { name: userId };
+      const update = {
+        $set: { refreshToken },
+        $addToSet: { refreshTokenUsed },
+      };
+
+      const result = await keytokenModel.updateOne(filter, update);
+
+      if (result.nModified === 0) {
+        throw new Error("Failed to update key token");
+      }
+
+      return result;
+    } catch (error) {
+      console.error(`Error updateKeyToken: ${error}`);
+      throw new Error("Failed to update key token");
+    }
   };
 }
 
