@@ -79,8 +79,6 @@ class AccessService {
     // if no
     const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
 
-    console.log("HOLDER TOKEN:::", holderToken);
-
     if (!holderToken) {
       throw new AuthFailureError("Shop not registered");
     }
@@ -118,7 +116,6 @@ class AccessService {
   };
 
   static logout = async (keyStore) => {
-    console.log("keystore:::", keyStore);
     const delKey = await KeyTokenService.removeKeyById(keyStore._id);
     return delKey;
   };

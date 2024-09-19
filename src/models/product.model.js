@@ -1,7 +1,7 @@
 "use strict";
 
-const { model, Schema, Types } = require("mongoose");
-
+const { model, Schema } = require("mongoose");
+const slugify = require("slugify");
 const DOCUMENT_NAME = "Product";
 const COLLECTION_NAME = "Products";
 
@@ -43,6 +43,15 @@ const productSchema = new Schema(
     timestamps: true,
   }
 );
+
+// Document middleware: runs before .save() and .create()...
+productSchema.pre("save", function (next) {
+  this.product_slug = slugify(this.product_name, { lower: true });
+  next();
+});
+
+// create index for search
+productSchema.index({ product_name: "text", product_description: "text" });
 
 // define the product type = clothing
 const clothingSchema = new Schema(
