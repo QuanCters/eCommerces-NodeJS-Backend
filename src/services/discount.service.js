@@ -37,15 +37,13 @@ class DiscountService {
       value,
       max_value,
       max_uses,
+      users_used,
       uses_count,
+      created_by,
       max_uses_per_user,
     } = payload;
 
     // kiem tra
-    if (new Date() < new Date(start_date) || new Date() > new Date(end_date)) {
-      throw new BadRequestError("Discount code has expired!");
-    }
-
     if (new Date(start_date) >= new Date(end_date)) {
       throw new BadRequestError("Start date must be before end date");
     }

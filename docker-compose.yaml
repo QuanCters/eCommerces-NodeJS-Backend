@@ -1,0 +1,28 @@
+services:
+  mongo:
+    image: mongo
+    container_name: nodejs_mongo_container
+    ports:
+      - "27017:27017"
+    volumes:
+      - nodejs_mongo_data:/data/db
+    networks:
+      - nodejs-backend-api-network
+
+  redis:
+    image: redis
+    container_name: nodejs_redis_container
+    ports:
+      - "6379:6379"
+    volumes:
+      - nodejs_redis_data:/data/db
+    networks:
+      - nodejs-backend-api-network
+
+volumes:
+  nodejs_mongo_data:
+  nodejs_redis_data:
+
+networks:
+  nodejs-backend-api-network:
+    driver: bridge

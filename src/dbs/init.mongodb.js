@@ -4,7 +4,6 @@ const {
 } = require("../configs/config.mongodb");
 const connectString = `mongodb://${host}:${port}/${name}`;
 const { countConnect } = require("../helpers/check.connect");
-console.log(connectString);
 // use singleton pattern
 class Database {
   constructor() {
@@ -13,15 +12,15 @@ class Database {
 
   // connect
   connect(type = "mongodb") {
-    if (1 === 1) {
-      mongoose.set("debug", true);
-      mongoose.set("debug", { color: true });
-    }
+    mongoose.set("debug", true);
+    mongoose.set("debug", { color: true });
+
+    console.log(connectString);
 
     mongoose
       .connect(connectString)
-      .then((_) => console.log(`Connected MongoDB Success`, countConnect()))
-      .catch((error) => console.log(`Error Connection: ${error}`));
+      .then(() => console.log(`Connected MongoDB Success`, countConnect()))
+      .catch((error) => console.log(`Error Connection: ${error.message}`));
   }
 
   static getInstance() {

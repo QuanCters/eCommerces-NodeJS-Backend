@@ -18,6 +18,8 @@ app.use(
 
 // init database
 require("./dbs/init.mongodb");
+const initRedis = require("./dbs/init.redis");
+initRedis.initRedis();
 
 // init routes
 app.use("/", require("./routes/index"));
@@ -34,6 +36,7 @@ app.use((error, req, res, next) => {
   return res.status(statusCode).json({
     status: "error",
     code: statusCode,
+    stack: error.stack,
     message: error.message || "Internal Server Error",
   });
 });
